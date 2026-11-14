@@ -65,6 +65,7 @@ table.t{width:100%;border-collapse:collapse}.t td,.t th{border-bottom:1px solid 
 .cols2{display:grid;grid-template-columns:2fr 1fr;gap:32px}.lrow{display:grid;grid-template-columns:250px 1fr;gap:18px;padding:18px 0;border-bottom:1px solid var(--ln)}
 .lrow img,.lrow .card-ph{aspect-ratio:16/10;width:100%;height:auto;object-fit:cover;border-radius:var(--r)}.lrow h3{font:700 22px/1.3 var(--serif);margin:6px 0}.lrow:hover h3{color:var(--or)}.lrow p{margin:4px 0;color:var(--mut)}
 .pop{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--ln);font-weight:600}.pop b{color:var(--or);font:800 22px var(--serif)}.pop:hover{color:var(--or)}
+.body figure{margin:18px 0}.body figcaption{color:var(--mut);font-size:14px;text-align:center}.body video{width:100%;border-radius:8px;background:#000}.body .yt{position:relative;padding-top:56.25%;margin:18px 0;background:#000;border-radius:8px;overflow:hidden}.body .yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.body .yt a{position:absolute;inset:0;color:#fff;display:flex;align-items:center;justify-content:center}
 @media(max-width:800px){.cols2{grid-template-columns:1fr}.lrow{grid-template-columns:120px 1fr;gap:12px}.lrow h3{font-size:17px}.lrow p{display:none}.hero1 .big{min-height:340px}}
 @media(max-width:800px){.hero,.cat,.cat.alt,.adm,footer .cols{grid-template-columns:1fr}.big{min-height:320px!important}.sr input{width:110px}}
 </style>
@@ -190,6 +191,7 @@ async function article(lang,sl){await shell('<p>Loading…</p>');
  <h2 class="sec">${t('cm')}</h2>${(cm||[]).map(c=>`<p><b>${esc(c.author_name)}</b> <span class="meta">${fd(c.created_at)}</span><br>${esc(c.body)}</p>`).join('')}
  ${p.comments_enabled?`<form onsubmit="comment(event,'${p.id}')"><div class="f"><input name="n" required maxlength="80" placeholder="${t('name')}"><input name="e" type="email" required placeholder="${t('email')}"></div><textarea name="b" required minlength="2" maxlength="2000" rows="3" placeholder="${t('msg')}" style="margin:8px 0"></textarea><input name="hp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px"><button class="btn">${t('send')}</button> <small class="meta">Comments appear after moderation.</small></form>`:''}</article>
  <div class="w">${rel.length?`<h2 class="sec">${t('related')}</h2><div class="grid">${rel.map(card).join('')}</div>`:''}${nlBox()}</div>`;
+ document.querySelectorAll('.body .yt[data-yt]').forEach(d=>{const id=d.dataset.yt;if(/^[\w-]{11}$/.test(id)){d.innerHTML='';const f=document.createElement('iframe');f.src='https://www.youtube-nocookie.com/embed/'+id;f.loading='lazy';f.allowFullscreen=true;f.title='YouTube video';d.append(f)}});
  let sid=sessionStorage.getItem('gk_s')||crypto.randomUUID();sessionStorage.setItem('gk_s',sid);sb.rpc('track_view',{p_post:p.id,p_session:sid,p_path:location.pathname,p_lang:cur.lang})}
 async function comment(e,id){e.preventDefault();const f=e.target;if(f.hp.value)return;const{error}=await sb.rpc('submit_comment',{p_post:id,p_name:f.n.value,p_email:f.e.value,p_body:f.b.value});if(error)return toast(error.message,1);f.reset();toast('Comment sent for moderation')}
 async function page(s){await shell('<p>…</p>');const{data}=await sb.from('static_pages').select('*').eq('slug',s).maybeSingle();if(!data)return notFound();
@@ -248,7 +250,7 @@ async function editor(nav,id,ed){let P={status:'draft'},tr={en:{},ur:{}};
   <div class="tb">${[['bold','B'],['italic','I'],['insertUnorderedList','• List'],['insertOrderedList','1. List'],['justifyLeft','⇤'],['justifyCenter','↔'],['justifyRight','⇥'],['undo','↶'],['redo','↷']].map(([c,n])=>`<button type="button" onclick="document.execCommand('${c}')">${n}</button>`).join('')}
   <button type="button" onclick="document.execCommand('formatBlock',0,'h2')">H2</button><button type="button" onclick="document.execCommand('formatBlock',0,'h3')">H3</button><button type="button" onclick="document.execCommand('formatBlock',0,'blockquote')">Quote</button><button type="button" onclick="document.execCommand('formatBlock',0,'p')">¶</button>
   <button type="button" onclick="let u=prompt('URL (https://…)');if(u&&/^https?:/.test(u))document.execCommand('createLink',0,u)">Link</button>
-  <button type="button" onclick="document.execCommand('insertHTML',0,'<table><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></table>')">Table</button></div>
+  <button type="button" onclick="document.execCommand('insertHTML',0,'<table><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></table>')">Table</button><button type="button" onclick="pickMedia('${l}','image')">🖼 Photos</button><button type="button" onclick="pickMedia('${l}','video')">🎬 Video</button><button type="button" onclick="addYT('${l}')">▶ YouTube</button><input type="file" id="mf_${l}" hidden></div>
   <div class="ed" id="b_${l}" contenteditable="true" oninput="dirty=true">${clean(tr[l].body)}</div></div>`;
  $('#main').innerHTML=`<div class="adm">${nav}<section><h2>${id?'Edit':'New'} article <small class="meta">(${P.status})</small></h2>
  <div class="f"><select id="cat">${opts}</select><label><input type="checkbox" id="feat" ${P.is_featured?'checked':''} ${ed?'':'disabled'}> Featured</label><label><input type="checkbox" id="brk" ${P.is_breaking?'checked':''} ${ed?'':'disabled'}> Breaking</label></div>
@@ -261,6 +263,19 @@ async function editor(nav,id,ed){let P={status:'draft'},tr={en:{},ur:{}};
   await sb.from('media').insert({path,url,mime:f.type,size_bytes:f.size,uploaded_by:ME.id,alt_en:$('#alt').value});dirty=true};
  if(!id)window.__as=setInterval(()=>{if(!$('#t_en')){clearInterval(window.__as);return}localStorage.setItem('gk_draft',JSON.stringify({tr:{en:{title:$('#t_en').value,slug:$('#s_en').value,excerpt:$('#x_en').value,body:$('#b_en').innerHTML},ur:{title:$('#t_ur').value,slug:$('#s_ur').value,excerpt:$('#x_ur').value,body:$('#b_ur').innerHTML}}}))},10000);
  document.querySelectorAll('#main input,#main textarea,#main select').forEach(i=>i.addEventListener('input',()=>dirty=true))}
+const __rng={};
+document.addEventListener('selectionchange',()=>{const s=getSelection();if(!s.rangeCount)return;const n=s.anchorNode&&(s.anchorNode.nodeType===1?s.anchorNode:s.anchorNode.parentElement);const e=n&&n.closest&&n.closest('.ed');if(e)__rng[e.id]=s.getRangeAt(0).cloneRange()});
+function ins(l,html){const e=$('#b_'+l),s=getSelection(),r=__rng['b_'+l];e.focus();s.removeAllRanges();if(r)s.addRange(r);else{s.selectAllChildren(e);s.collapseToEnd()}document.execCommand('insertHTML',false,html);dirty=true}
+function pickMedia(l,kind){const i=$('#mf_'+l);i.accept=kind==='video'?'video/mp4,video/webm':'image/jpeg,image/png,image/webp,image/gif';i.multiple=kind!=='video';i.onchange=()=>{const f=[...i.files];i.value='';upMedia(f,l)};i.click()}
+function addYT(l){const u=prompt('Paste the YouTube link');if(!u)return;const m=u.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);if(!m)return toast('Invalid YouTube link',1);ins(l,`<div class="yt" data-yt="${m[1]}"><a href="https://youtu.be/${m[1]}">Watch on YouTube</a></div><p><br></p>`)}
+async function upMedia(files,l){const alt=(files.some(f=>f.type.startsWith('image/'))?prompt('Short description of the photo(s) — used as alt text and caption',$('#t_'+l).value):'')||'';
+ for(const f of files){const v=f.type.startsWith('video/'),ok=v?['video/mp4','video/webm']:['image/jpeg','image/png','image/webp','image/gif'];
+  if(!ok.includes(f.type)){toast(f.name+': unsupported file type',1);continue}if(f.size>(v?52428800:5242880)){toast(f.name+': too large (max '+(v?'50':'5')+' MB)',1);continue}
+  toast('Uploading '+f.name+'…');const path=`${ME.id}/${Date.now()}-${f.name.replace(/[^\w.-]/g,'_')}`;
+  const{error}=await sb.storage.from('media').upload(path,f,{contentType:f.type});if(error){toast(error.message,1);continue}
+  const url=sb.storage.from('media').getPublicUrl(path).data.publicUrl;await sb.from('media').insert({path,url,mime:f.type,size_bytes:f.size,uploaded_by:ME.id,alt_en:alt});
+  ins(l,v?`<p><video controls preload="metadata" playsinline src="${url}"></video></p><p><br></p>`:`<figure><img src="${url}" alt="${esc(alt)}" loading="lazy"><figcaption>${esc(alt)}</figcaption></figure><p><br></p>`)}
+ toast('Upload finished ✓')}
 async function savePost(id,status){try{
  const row={category_id:$('#cat').value||null,featured_image:$('#img').value||null,image_alt:$('#alt').value||null,is_featured:$('#feat').checked,is_breaking:$('#brk').checked};
  if(status==='scheduled'){const v=$('#sched').value;if(!v)return toast('Pick a date and time',1);row.publish_at=new Date(v).toISOString()}
