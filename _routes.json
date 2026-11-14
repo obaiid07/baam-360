@@ -1,9 +1,1 @@
-{
-  "version": 1,
-  "include": ["/*"],
-  "exclude": [
-    "/favicon.svg",
-    "/ads.txt",
-    "/google324f27d39ffaa559.html"
-  ]
-}
+{"version":1,"include":["/*"],"exclude":["/favicon.svg","/ads.txt"]}
