@@ -5,6 +5,10 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 const PL=l=>l==='ur'?'/ur/':'/';
 const rest=async(env,q)=>{try{const r=await fetch(`${env.SUPABASE_URL||SB_URL}/rest/v1/${q}`,{headers:{apikey:env.SUPABASE_ANON_KEY||SB_KEY}});return r.ok?await r.json():[]}catch(e){return[]}};
 const links=rows=>rows.filter(r=>visible(r.posts)&&r.posts.categories).map(r=>`<li><a href="${esc(PL(r.lang)+r.posts.categories.slug+'/'+encodeURIComponent(r.slug))}">${esc(r.title)}</a>${r.excerpt?' — '+esc(r.excerpt):''}</li>`).join('');
+const paras=h=>String(h||'').replace(/&nbsp;/g,' ').replace(/<\/(p|h[1-6]|li|blockquote|tr)>|<br\s*\/?>/gi,'\n').replace(/<[^>]+>/g,'').split('\n').map(x=>x.trim()).filter(Boolean).slice(0,200);
+const goodTitle=(s,t)=>s&&s.length<=70&&(s.match(/,/g)||[]).length<3?s:t;
+const foot=l=>{const L={about:['About Us','ہمارے بارے میں'],contact:['Contact Us','رابطہ'],privacy:['Privacy Policy','پرائیویسی پالیسی'],disclaimer:['Disclaimer','دستبرداری'],terms:['Terms and Conditions','شرائط و ضوابط']};
+ return `<footer><nav aria-label="Footer"><a href="${PL(l)}">${l==='ur'?'ہوم':'Home'}</a> `+Object.keys(L).map(k=>`<a href="${PL(l)}p/${k}">${L[k][l==='ur'?1:0]}</a>`).join(' ')+`</nav><p>© BAAM 360</p></footer>`};
 const visible=p=>!!p&&((p.status==='published'&&(!p.published_at||new Date(p.published_at)<=new Date()))||(p.status==='scheduled'&&new Date(p.publish_at)<=new Date()));
 const dec=x=>{try{return decodeURIComponent(x)}catch(e){return x}};
 export async function onRequest({request,env,next}){
@@ -17,6 +21,9 @@ export async function onRequest({request,env,next}){
  let status=200,title=null,desc=null,canon=null,fallback='',inject='',robots=false;
  if(seg[0]==='admin')robots=true;
  else if(seg.length>2||(seg[0]==='p'&&seg.length!==2)||(seg[0]==='s'&&seg.length>2)){status=404;robots=true}
+ else if(seg[0]==='p'&&seg.length===2){const pg=await rest(env,`static_pages?select=title_en,title_ur,body_en,body_ur&slug=eq.${encodeURIComponent(seg[1])}&limit=1`);
+  if(!pg[0]){status=404;robots=true}else{const ur=lang==='ur'&&pg[0].title_ur,ti=ur?pg[0].title_ur:pg[0].title_en,bd=lang==='ur'&&pg[0].body_ur?pg[0].body_ur:pg[0].body_en,ps=paras(bd);
+   title=ti+' — BAAM 360';canon=base+PL(lang)+'p/'+encodeURIComponent(seg[1]);desc=(ps[0]||'').slice(0,160);fallback=`<article><h1>${esc(ti)}</h1>${ps.map(x=>`<p>${esc(x)}</p>`).join('')}</article>`}}
  else if(seg.length&&!RESERVED.includes(seg[0])){
   const slug=seg[seg.length-1];let isCat=false;
   if(seg.length===1){const c=await rest(env,`categories?select=slug,name_en,name_ur,description_en,description_ur&is_active=eq.true&slug=eq.${encodeURIComponent(slug)}&limit=1`);
@@ -29,15 +36,16 @@ export async function onRequest({request,env,next}){
    if(!r){status=404;robots=true}
    else{const cpath=PL(r.lang)+r.posts.categories.slug+'/'+encodeURIComponent(r.slug);
     if(decodeURI(url.pathname)!==decodeURI(cpath))return Response.redirect(url.origin+cpath,301);
-    lang=r.lang;title=r.seo_title||r.title;desc=r.meta_description||r.excerpt||'';canon=base+cpath;
+    lang=r.lang;title=goodTitle(r.seo_title,r.title);desc=r.meta_description||r.excerpt||'';canon=base+cpath;
     const txt=String(r.body||'').replace(/&nbsp;/g,' ').replace(/<\/(p|h[1-6]|li|blockquote|tr)>|<br\s*\/?>/gi,'\n').replace(/<[^>]+>/g,'').split('\n').map(x=>x.trim()).filter(Boolean).slice(0,200);
-    fallback=`<article><h1>${esc(r.title)}</h1><p>${esc(r.excerpt)}</p>${txt.map(x=>`<p>${esc(x)}</p>`).join('')}</article>`;
+    fallback=`<article><h1>${esc(r.title)}</h1><p><time datetime="${esc(r.posts.published_at||'')}">${esc(r.posts.published_at?new Date(r.posts.published_at).toUTCString().slice(5,16):'')}</time></p><p>${esc(r.excerpt)}</p>${txt.map(x=>`<p>${esc(x)}</p>`).join('')}</article>`;
     const img=r.posts.featured_image;
     const ld={'@context':'https://schema.org','@type':'NewsArticle',mainEntityOfPage:canon,headline:r.title,description:r.excerpt,dateModified:r.updated_at,datePublished:r.posts.published_at||undefined,image:img?[img]:undefined,inLanguage:r.lang,publisher:{'@type':'Organization',name:'BAAM 360'}};
     inject=`<meta property="og:type" content="article"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${esc(canon)}"><meta property="og:site_name" content="BAAM 360">`+(img?`<meta property="og:image" content="${esc(img)}"><meta name="twitter:image" content="${esc(img)}">`:'')+`<meta name="twitter:card" content="${img?'summary_large_image':'summary'}"><meta name="twitter:title" content="${esc(title)}"><meta name="twitter:description" content="${esc(desc)}"><script type="application/ld+json" data-ld="1">${JSON.stringify(ld).replace(/</g,'\\u003c')}</script>`}}
  }
  if(!seg.length){const[cs,rs]=await Promise.all([rest(env,'categories?select=slug,name_en,name_ur&is_active=eq.true&order=sort_order'),rest(env,`post_translations?select=title,slug,lang,excerpt,posts!inner(status,published_at,publish_at,categories(slug))&lang=eq.${lang}&order=updated_at.desc&limit=24`)]);
   fallback=`<h1>BAAM 360 — Knowledge Without Borders</h1><nav>${cs.map(c=>`<a href="${PL(lang)}${esc(c.slug)}">${esc(lang==='ur'?c.name_ur:c.name_en)}</a>`).join(' ')}</nav><ul>${links(rs)}</ul>`;canon=base+PL(lang)}
+ if(fallback)fallback+=foot(lang);
  if(robots)inject+='<meta name="robots" content="noindex,nofollow">';
  if(!canon&&!robots)canon=base+url.pathname;
  const rw=new HTMLRewriter();
