@@ -61,6 +61,11 @@ table.t{width:100%;border-collapse:collapse}.t td,.t th{border-bottom:1px solid 
 .dr{position:fixed;inset:0;z-index:40;background:#0008}.dr .pn{position:absolute;top:0;bottom:0;inset-inline-start:0;width:min(86vw,340px);background:#fff;overflow-y:auto;padding:16px}.dr .pn>a{display:block;padding:12px 8px;border-bottom:1px solid var(--ln);font-weight:600}
 @media(max-width:960px){.dn{display:none}.ham{display:block}.top .tick{order:3;flex-basis:100%}}
 @media(max-width:520px){.logo{font-size:22px}.logo svg{width:34px;height:34px}.logo small{display:none}.btn.sub{display:none}}
+.hero1{margin:24px 0}.hero1 .big{display:flex;position:relative;border-radius:var(--r);overflow:hidden;min-height:480px;background:var(--ink);color:#fff;align-items:flex-end}
+.cols2{display:grid;grid-template-columns:2fr 1fr;gap:32px}.lrow{display:grid;grid-template-columns:250px 1fr;gap:18px;padding:18px 0;border-bottom:1px solid var(--ln)}
+.lrow img,.lrow .card-ph{aspect-ratio:16/10;width:100%;height:auto;object-fit:cover;border-radius:var(--r)}.lrow h3{font:700 22px/1.3 var(--serif);margin:6px 0}.lrow:hover h3{color:var(--or)}.lrow p{margin:4px 0;color:var(--mut)}
+.pop{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--ln);font-weight:600}.pop b{color:var(--or);font:800 22px var(--serif)}.pop:hover{color:var(--or)}
+@media(max-width:800px){.cols2{grid-template-columns:1fr}.lrow{grid-template-columns:120px 1fr;gap:12px}.lrow h3{font-size:17px}.lrow p{display:none}.hero1 .big{min-height:340px}}
 @media(max-width:800px){.hero,.cat,.cat.alt,.adm,footer .cols{grid-template-columns:1fr}.big{min-height:320px!important}.sr input{width:110px}}
 </style>
 </head>
@@ -146,15 +151,14 @@ async function home(){
  await shell('<p class="meta">Loading…</p>','home');let rows;try{rows=await posts(L)}catch(e){return $('#main').innerHTML=`<p>${esc(e.message)}</p>`}
  const br=rows.filter(r=>r.posts.is_breaking).slice(0,8);if(br.length){$('#tick').hidden=false;$('#tk').innerHTML=br.map(r=>`<a href="${href(r)}">${esc(r.title)}</a>`).join(' &nbsp;•&nbsp; ')}
  if(!rows.length){$('#main').innerHTML=adSlot('homepage')+`<p style="padding:60px 0;text-align:center">${t('empty')}</p>`+nlBox();return}
- const feat=rows.filter(r=>r.posts.is_featured);const hero=[...feat,...rows.filter(r=>!r.posts.is_featured)].slice(0,3);const [a,...rest]=hero;
+ const byDate=[...rows].sort((x,y)=>new Date(y.posts.published_at)-new Date(x.posts.published_at));
+ const a=byDate.find(r=>r.posts.is_featured)||byDate[0],rest=byDate.filter(r=>r!==a);
  const pop=[...rows].sort((x,y)=>y.posts.view_count-x.posts.view_count).slice(0,5);
- let h=`<section class="hero"><a class="big" href="${href(a)}">${a.posts.featured_image?`<img src="${esc(a.posts.featured_image)}" alt="${esc(a.posts.image_alt||'')}">`:''}<div><span class="tag">${esc(cn(a.posts.categories))}</span><h2>${esc(a.title)}</h2><p>${esc(a.excerpt||'')}</p><span class="meta" style="color:#ddd">${fd(a.posts.published_at)}</span></div></a>
- <div class="side">${rest.map(r=>`<a href="${href(r)}">${img(r.posts.featured_image,r.posts.image_alt)}<div><span class="tag">${esc(cn(r.posts.categories))}</span><h4 style="font:700 18px var(--serif);margin:4px 0">${esc(r.title)}</h4><span class="meta">${fd(r.posts.published_at)}</span></div></a>`).join('')}</div></section>
- ${adSlot('homepage')}<h2 class="sec">${t('trend')}</h2><div class="grid">${pop.map(card).join('')}</div>`;
- CATS.forEach((c,i)=>{const rs=rows.filter(r=>r.posts.category_id===c.id).slice(0,4);if(!rs.length)return;const[f,...o]=rs;
-  h+=`<h2 class="sec">${esc(cn(c))}<a href="${P()}${c.slug}">${t('all')}</a></h2><section class="cat ${i%2?'alt':''}">${card(f)}<div class="grid">${o.map(card).join('')}</div></section>`});
- h+=`<h2 class="sec">${t('latest')}</h2><div class="grid" id="lt">${rows.slice(0,12).map(card).join('')}</div>`;
- if(rows.length>12)h+=`<p style="text-align:center"><button class="btn g" onclick="this.previousElementSibling.insertAdjacentHTML('beforeend',window.__rest);this.remove()">Load more</button></p>`,window.__rest=rows.slice(12).map(card).join('');
+ const row=r=>`<a class="lrow" href="${href(r)}">${img(r.posts.featured_image,r.posts.image_alt)}<div><span class="tag">${esc(cn(r.posts.categories))}</span><h3>${esc(r.title)}</h3><p>${esc((r.excerpt||'').slice(0,170))}</p><span class="meta">${fd(r.posts.published_at)}</span></div></a>`;
+ window.__more=rest.slice(10).map(row).join('');
+ const h=`<section class="hero1"><a class="big" href="${href(a)}">${a.posts.featured_image?`<img src="${esc(a.posts.featured_image)}" alt="${esc(a.posts.image_alt||'')}">`:''}<div><span class="tag">${esc(cn(a.posts.categories))}</span><h2>${esc(a.title)}</h2><p>${esc(a.excerpt||'')}</p><span class="meta" style="color:#ddd">${fd(a.posts.published_at)}</span></div></a></section>${adSlot('homepage')}
+ <div class="cols2"><section><h2 class="sec">${t('latest')}</h2><div id="lt">${rest.slice(0,10).map(row).join('')||'<p class="meta">—</p>'}</div>${rest.length>10?`<p style="text-align:center"><button class="btn g" onclick="document.getElementById('lt').insertAdjacentHTML('beforeend',window.__more);this.remove()">${L==='ur'?'مزید دیکھیں':'Load more'}</button></p>`:''}</section>
+ <aside><h2 class="sec">${t('trend')}</h2>${pop.map((r,i)=>`<a class="pop" href="${href(r)}"><b>${i+1}</b><span>${esc(r.title)}</span></a>`).join('')}<h2 class="sec">${L==='ur'?'زمرے':'Categories'}</h2>${CATS.map(c=>`<a class="pop" href="${P()}${c.slug}"><span>${esc(cn(c))}</span></a>`).join('')}${adSlot('sidebar')}</aside></div>`;
  $('#main').innerHTML=adSlot('header')+h+nlBox();loadAds();setMeta('BAAM 360 — Knowledge Without Borders','International bilingual magazine in English and Urdu.',{'@context':'https://schema.org','@type':'Organization',name:'BAAM 360',url:BASE()})}
 async function category(s){const c=CATS.find(x=>x.slug===s)||(await sb.from('categories').select('*').eq('slug',s).single()).data;await shell('<p>Loading…</p>',s);if(!c)return notFound();
  const rows=await posts(L,q=>q.eq('posts.category_id',c.id));setMeta(cn(c)+' — BAAM 360',L==='ur'?c.description_ur:c.description_en);
@@ -175,7 +179,7 @@ async function article(lang,sl){await shell('<p>Loading…</p>');
  const{data:cm}=await sb.from('comments').select('author_name,body,created_at').eq('post_id',p.id).eq('status','approved').order('created_at');
  const alt=sib.find(s=>s.lang!==cur.lang);
  const cpath=U.art(cur.lang,p.categories.slug,cur.slug),aurl=BASE()+cpath;
- setMeta(cur.seo_title||cur.title,cur.meta_description||cur.excerpt,[{'@context':'https://schema.org','@type':'NewsArticle',mainEntityOfPage:aurl,headline:cur.title,description:cur.excerpt,datePublished:p.published_at,dateModified:cur.updated_at,author:{'@type':'Person',name:au?.display_name||'BAAM 360'},image:p.featured_image?[p.featured_image]:undefined,inLanguage:cur.lang,articleSection:p.categories.name_en,publisher:{'@type':'Organization',name:'BAAM 360',logo:{'@type':'ImageObject',url:BASE()+'/favicon.svg'}}},{'@context':'https://schema.org','@type':'BreadcrumbList',itemListElement:[['Home',PL(cur.lang)],[cn(p.categories),PL(cur.lang)+p.categories.slug],[cur.title,cpath]].map((x,i)=>({'@type':'ListItem',position:i+1,name:x[0],item:BASE()+x[1]}))}],{path:cpath,img:p.featured_image,type:'article',alts:sib.map(x=>({lang:x.lang,path:U.art(x.lang,p.categories.slug,x.slug)}))});
+ setMeta(((x,y)=>x&&x.length<=70&&(x.match(/,/g)||[]).length<3?x:y)(cur.seo_title,cur.title),cur.meta_description||cur.excerpt,[{'@context':'https://schema.org','@type':'NewsArticle',mainEntityOfPage:aurl,headline:cur.title,description:cur.excerpt,datePublished:p.published_at,dateModified:cur.updated_at,author:{'@type':'Person',name:au?.display_name||'BAAM 360'},image:p.featured_image?[p.featured_image]:undefined,inLanguage:cur.lang,articleSection:p.categories.name_en,publisher:{'@type':'Organization',name:'BAAM 360',logo:{'@type':'ImageObject',url:BASE()+'/favicon.svg'}}},{'@context':'https://schema.org','@type':'BreadcrumbList',itemListElement:[['Home',PL(cur.lang)],[cn(p.categories),PL(cur.lang)+p.categories.slug],[cur.title,cpath]].map((x,i)=>({'@type':'ListItem',position:i+1,name:x[0],item:BASE()+x[1]}))}],{path:cpath,img:p.featured_image,type:'article',alts:sib.map(x=>({lang:x.lang,path:U.art(x.lang,p.categories.slug,x.slug)}))});
  window.__sib=Object.fromEntries(sib.map(x=>[x.lang,U.art(x.lang,p.categories.slug,x.slug)]));
  try{if(decodeURI(location.pathname)!==decodeURI(cpath))history.replaceState(null,'',cpath)}catch(e){}
  $('#main').innerHTML=`<article class="art" dir="${rtl?'rtl':'ltr'}"><nav class="meta"><a href="${PL(cur.lang)}">${t('home')}</a> / <a href="${PL(cur.lang)}${p.categories.slug}">${esc(cn(p.categories))}</a></nav>${note}
@@ -240,7 +244,7 @@ async function editor(nav,id,ed){let P={status:'draft'},tr={en:{},ur:{}};
  const bak=!id&&JSON.parse(localStorage.getItem('gk_draft')||'null');if(bak)tr=bak.tr;
  const opts=CATS.map(c=>`<option value="${c.id}" ${c.id===P.category_id?'selected':''}>${esc(c.name_en)}</option>`).join('');
  const pane=l=>`<div id="p_${l}" ${l==='ur'?'hidden':''} dir="${l==='ur'?'rtl':'ltr'}" style="display:grid;gap:8px"><input id="t_${l}" placeholder="Title (${l})" value="${esc(tr[l].title)}"><input id="s_${l}" placeholder="Slug (${l})" value="${esc(tr[l].slug)}"><textarea id="x_${l}" rows="2" placeholder="Excerpt">${esc(tr[l].excerpt)}</textarea>
-  <input id="st_${l}" placeholder="SEO title" value="${esc(tr[l].seo_title)}"><input id="sm_${l}" placeholder="Meta description" value="${esc(tr[l].meta_description)}">
+  <input id="st_${l}" maxlength="70" placeholder="SEO title (max 70 characters, no keyword lists)" value="${esc(tr[l].seo_title)}"><input id="sm_${l}" maxlength="160" placeholder="Meta description (max 160 characters)" value="${esc(tr[l].meta_description)}">
   <div class="tb">${[['bold','B'],['italic','I'],['insertUnorderedList','• List'],['insertOrderedList','1. List'],['justifyLeft','⇤'],['justifyCenter','↔'],['justifyRight','⇥'],['undo','↶'],['redo','↷']].map(([c,n])=>`<button type="button" onclick="document.execCommand('${c}')">${n}</button>`).join('')}
   <button type="button" onclick="document.execCommand('formatBlock',0,'h2')">H2</button><button type="button" onclick="document.execCommand('formatBlock',0,'h3')">H3</button><button type="button" onclick="document.execCommand('formatBlock',0,'blockquote')">Quote</button><button type="button" onclick="document.execCommand('formatBlock',0,'p')">¶</button>
   <button type="button" onclick="let u=prompt('URL (https://…)');if(u&&/^https?:/.test(u))document.execCommand('createLink',0,u)">Link</button>
@@ -269,6 +273,8 @@ async function savePost(id,status){try{
  await sb.from('activity_logs').insert({user_id:ME.id,action:status||'save',entity:'post',entity_id:id});
  dirty=false;localStorage.removeItem('gk_draft');toast('Saved ✓');go('/admin/edit/'+id)}catch(e){toast(e.message,1)}}
 // ---------- router ----------
+function showErr(m){const a=$('#app');if(a&&!a.children.length)a.innerHTML='<div style="padding:40px;font-family:sans-serif;max-width:640px;margin:auto"><h2>Something went wrong</h2><pre style="white-space:pre-wrap;background:#f3f4f6;padding:12px;border-radius:8px">'+esc(m)+'</pre><p><a href="/">Home</a></p></div>'}
+addEventListener('unhandledrejection',e=>showErr(String((e.reason&&e.reason.message)||e.reason)));addEventListener('error',e=>showErr(e.message));
 async function route(){document.body.style.overflow='';
  const dec=x=>{try{return decodeURIComponent(x)}catch(e){return x}};
  try{
@@ -292,7 +298,7 @@ async function route(){document.body.style.overflow='';
  if(seg.length===1&&CATS.some(c=>c.slug===seg[0])){R.type='cat';return category(seg[0])}
  if(seg.length<=2){R.type='article';return article(L,seg[seg.length-1])}
  return notFound()
- }catch(e){console.error(e);toast(e.message||'Error',1)}}
+ }catch(e){console.error(e);toast(e.message||'Error',1);showErr(e.message)}}
 addEventListener('popstate',route);addEventListener('hashchange',route);
 document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a[href]');if(!a||e.defaultPrevented||e.button||e.metaKey||e.ctrlKey||e.shiftKey||a.target==='_blank')return;
  const h=a.getAttribute('href');if(!h.startsWith('/')||h.startsWith('//')||/\.[a-z0-9]+$/i.test(h.split('?')[0]))return;e.preventDefault();
