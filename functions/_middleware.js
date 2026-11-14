@@ -9,6 +9,7 @@ const dec=x=>{try{return decodeURIComponent(x)}catch(e){return x}};
 export async function onRequest({request,env,next}){
  const url=new URL(request.url);
  if(request.method!=='GET'||/\.[a-z0-9]+$/i.test(url.pathname))return next();
+ if(/^\/google[0-9a-f]{10,}(\.html)?$/i.test(url.pathname))return next(); // Google Search Console verification file (with or without .html)
  const base=(env.SITE_URL||url.origin).replace(/\/$/,'');
  const seg=url.pathname.split('/').filter(Boolean).map(dec);let lang='en';if(seg[0]==='ur'){lang='ur';seg.shift()}
  const shell=await env.ASSETS.fetch(new Request(new URL('/',url)));
