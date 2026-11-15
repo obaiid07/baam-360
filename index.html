@@ -9,6 +9,9 @@
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M9H7MFMV');</script>
 <!-- End Google Tag Manager -->
+<!-- Google Analytics 4 (G-NPB3V2QLQ6): page views are sent by the site on every page change -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NPB3V2QLQ6"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-NPB3V2QLQ6',{send_page_view:false});</script>
 <link rel="alternate" type="application/rss+xml" title="BAAM 360 (English)" href="/rss.xml"><link rel="alternate" type="application/rss+xml" title="BAAM 360 (اردو)" href="/rss.xml?lang=ur">
 
 <link rel="canonical" href="" id="canon">
@@ -119,7 +122,8 @@ function setMeta(title,desc,extra,o){o=o||{};document.title=title;const url=BASE
  document.querySelectorAll('link[data-hl],script[data-ld]').forEach(e=>e.remove());
  if(o.alts&&o.alts.length>1)o.alts.concat([o.alts.find(a=>a.lang==='en')||o.alts[0]]).forEach((a,i,ar)=>{const l=document.createElement('link');l.rel='alternate';l.hreflang=i===ar.length-1?'x-default':a.lang;l.href=BASE()+a.path;l.dataset.hl=1;document.head.append(l)});
  [].concat(extra||[]).forEach(x=>{const s=document.createElement('script');s.type='application/ld+json';s.dataset.ld=1;s.textContent=JSON.stringify(x);document.head.append(s)});
- window.dataLayer=window.dataLayer||[];dataLayer.push({event:'virtual_pageview',page_path:location.pathname,page_title:title,page_language:L})}
+ window.dataLayer=window.dataLayer||[];dataLayer.push({event:'virtual_pageview',page_path:location.pathname,page_title:title,page_language:L});
+ if(window.gtag){const pp=o.path||location.pathname;gtag('event','page_view',{page_path:pp,page_title:title,page_location:location.origin+pp,language:L})}}
 function drawer(o){$('#dr').hidden=!o;document.body.style.overflow=o?'hidden':'';$('.ham').setAttribute('aria-expanded',o?'true':'false')}
 function srch(){const b=$('#sbar');b.hidden=!b.hidden;if(!b.hidden)b.querySelector('input').focus()}
 function setLang(l){L=l;localStorage.setItem('gk_lang',l);document.documentElement.lang=l;document.documentElement.dir=l==='ur'?'rtl':'ltr';
