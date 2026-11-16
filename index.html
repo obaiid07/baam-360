@@ -6,6 +6,7 @@
 <title>BAAM 360 — Knowledge Without Borders</title>
 <meta name="description" content="International bilingual magazine: education, health, news, technology and more in English and Urdu.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2215%22%20fill%3D%22%23E8590C%22/%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2219%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223.5%22/%3E%3Cellipse%20cx%3D%2232%22%20cy%3D%2232%22%20rx%3D%228%22%20ry%3D%2219%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22/%3E%3Cpath%20d%3D%22M13%2032h38%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22/%3E%3Ccircle%20cx%3D%2249%22%20cy%3D%2215%22%20r%3D%225%22%20fill%3D%22%231F2328%22/%3E%3C/svg%3E"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><meta name="theme-color" content="#E8590C">
+<link rel="manifest" href="/manifest.json">
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M9H7MFMV');</script>
 <!-- End Google Tag Manager -->
@@ -86,7 +87,7 @@ table.t{width:100%;border-collapse:collapse}.t td,.t th{border-bottom:1px solid 
 <script>
 // WEBSITE_DOMAIN: leave '' to use the domain the site is opened on; set to 'https://baam360.online' once that domain is connected.
 // FACEBOOK_URL: paste your Facebook page link between the quotes when it is ready; the Facebook icon then appears automatically.
-window.CFG={SUPABASE_URL:'https://mqpfsqokaydsztanpkhj.supabase.co',SUPABASE_ANON_KEY:'sb_publishable_-vfCDMw3va6C-NOeXYZc5w_pidx_JiR',GOOGLE_ADSENSE_CLIENT_ID:'',GOOGLE_ANALYTICS_ID:'',WEBSITE_DOMAIN:'',WHATSAPP_CHANNEL:'https://whatsapp.com/channel/0029VbEczRe0AgW8DkoZjZ41',FACEBOOK_URL:'https://www.facebook.com/share/1DZYNtGmEs/',X_URL:'https://x.com/ObaiidKhalid'};
+window.CFG={SUPABASE_URL:'https://mqpfsqokaydsztanpkhj.supabase.co',SUPABASE_ANON_KEY:'sb_publishable_-vfCDMw3va6C-NOeXYZc5w_pidx_JiR',GOOGLE_ADSENSE_CLIENT_ID:'',GOOGLE_ANALYTICS_ID:'',WEBSITE_DOMAIN:'',VAPID_PUBLIC_KEY:'BDj4Fjl9IIuWLSVNeFnJzJzd6ld31iwNaIOWa0uZ3B79YmT3xoEQ8_Kh9mInik3ps_Swm1n-UZyarf8zTsa7Ni8',WHATSAPP_CHANNEL:'https://whatsapp.com/channel/0029VbEczRe0AgW8DkoZjZ41',FACEBOOK_URL:'https://www.facebook.com/share/1DZYNtGmEs/',X_URL:'https://x.com/ObaiidKhalid'};
 </script>
 <div id="app"></div><div id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
@@ -97,8 +98,8 @@ const LOGO='<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="
 const sb=supabase.createClient(C.SUPABASE_URL,C.SUPABASE_ANON_KEY);
 let L=localStorage.getItem('gk_lang')||'en',CATS=[],ME=null,ROLES=[];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const T={en:{home:'Home',search:'Search',latest:'Latest articles',all:'View all',read:'Read more',by:'By',sub:'Subscribe',email:'Your email',empty:'No published articles yet.',news:'Get the best of Global Knowledge in your inbox',consent:'By subscribing you agree to receive emails. Unsubscribe any time.',views:'views',min:'min read',related:'Related articles',cm:'Comments',send:'Send',name:'Name',msg:'Message',subj:'Subject',trend:'Most read',breaking:'Breaking',tr:'Showing the English version (no translation available).'},
-ur:{home:'ہوم',search:'تلاش',latest:'تازہ ترین مضامین',all:'سب دیکھیں',read:'مزید پڑھیں',by:'از',sub:'سبسکرائب',email:'آپ کا ای میل',empty:'ابھی کوئی شائع شدہ مضمون نہیں۔',news:'گلوبل نالج کی بہترین تحریریں اپنے ان باکس میں حاصل کریں',consent:'سبسکرائب کرنے پر آپ ای میل وصول کرنے سے اتفاق کرتے ہیں۔',views:'مشاہدات',min:'منٹ مطالعہ',related:'متعلقہ مضامین',cm:'تبصرے',send:'بھیجیں',name:'نام',msg:'پیغام',subj:'موضوع',trend:'سب سے زیادہ پڑھے گئے',breaking:'بریکنگ',tr:'اردو ترجمہ دستیاب نہیں؛ انگریزی ورژن دکھایا جا رہا ہے۔'}};
+const T={en:{home:'Home',search:'Search',latest:'Latest articles',all:'View all',read:'Read more',by:'By',sub:'Subscribe',email:'Your email',empty:'No published articles yet.',news:'Get a notification for every new article',consent:'By subscribing you agree to receive notifications or emails. You can stop them any time.',views:'views',min:'min read',related:'Related articles',cm:'Comments',send:'Send',name:'Name',msg:'Message',subj:'Subject',trend:'Most read',breaking:'Breaking',tr:'Showing the English version (no translation available).'},
+ur:{home:'ہوم',search:'تلاش',latest:'تازہ ترین مضامین',all:'سب دیکھیں',read:'مزید پڑھیں',by:'از',sub:'سبسکرائب',email:'آپ کا ای میل',empty:'ابھی کوئی شائع شدہ مضمون نہیں۔',news:'ہر نئے مضمون کی اطلاع حاصل کریں',consent:'سبسکرائب کرنے پر آپ نوٹیفیکیشن یا ای میل وصول کرنے سے اتفاق کرتے ہیں۔ آپ جب چاہیں انہیں بند کر سکتے ہیں۔',views:'مشاہدات',min:'منٹ مطالعہ',related:'متعلقہ مضامین',cm:'تبصرے',send:'بھیجیں',name:'نام',msg:'پیغام',subj:'موضوع',trend:'سب سے زیادہ پڑھے گئے',breaking:'بریکنگ',tr:'اردو ترجمہ دستیاب نہیں؛ انگریزی ورژن دکھایا جا رہا ہے۔'}};
 const t=k=>T[L][k]||k;
 const toast=(m,bad)=>{const e=$('#toast');e.textContent=m;e.style.background=bad?'#b42318':'';e.style.display='block';setTimeout(()=>e.style.display='none',3500)};
 const clean=h=>DOMPurify.sanitize(h||'',{USE_PROFILES:{html:true},FORBID_TAGS:['style','form','input','script','iframe'],FORBID_ATTR:['style']});
@@ -147,7 +148,7 @@ async function shell(inner,active){
  <header class="m"><div class="w"><div class="hd"><button class="ham" aria-label="Menu" aria-expanded="false" onclick="drawer(1)">☰</button>
  <a class="logo" href="${P()}" aria-label="BAAM 360">${LOGO}<span>BAAM <i>360</i><small>${L==='ur'?'علم بغیر سرحدوں کے':'Knowledge Without Borders'}</small></span></a>
  <nav class="dn" aria-label="Main"><a href="${P()}" class="${active==='home'?'on':''}">${t('home')}</a>${CATS.slice(0,7).map(c=>`<a href="${P()}${c.slug}" class="${active===c.slug?'on':''}">${esc(cn(c))}</a>`).join('')}${CATS.length>7?`<div class="dd"><button aria-haspopup="true">${L==='ur'?'مزید':'More'} ▾</button><div class="ddm">${CATS.slice(7).map(c=>`<a href="${P()}${c.slug}">${esc(cn(c))}</a>`).join('')}</div></div>`:''}</nav>
- <div class="acts"><button class="ic" aria-label="${t('search')}" onclick="srch()">⌕</button><a class="btn sub" href="${P()}newsletter">${t('sub')}</a></div></div></div>
+ <div class="acts"><button class="ic" aria-label="${t('search')}" onclick="srch()">⌕</button><button class="btn sub" onclick="pushSub()">🔔 ${t('sub')}</button></div></div></div>
  <div id="sbar" hidden><div class="w"><form onsubmit="event.preventDefault();go(P()+'s/'+encodeURIComponent(this.q.value))"><input name="q" required aria-label="${t('search')}" placeholder="${t('search')}…"><button class="btn">${t('search')}</button></form></div></div></header>
  <div class="dr" id="dr" hidden onclick="if(event.target===this)drawer(0)"><div class="pn"><div class="f" style="justify-content:space-between;align-items:center"><b class="logo" style="font-size:22px">BAAM <i>360</i></b><button class="ic" aria-label="Close" onclick="drawer(0)">✕</button></div>
  <a href="${P()}">${t('home')}</a>${CATS.map(c=>`<a href="${P()}${c.slug}">${esc(cn(c))}</a>`).join('')}
@@ -160,7 +161,23 @@ async function shell(inner,active){
  <div><h5>${L==='ur'?'مزید':'Explore'}</h5><ul><li><a href="${P()}">${t('latest')}</a></li><li><a href="${P()}popular">${t('trend')}</a></li><li><a href="${P()}newsletter">${L==='ur'?'نیوز لیٹر':'Newsletter'}</a></li></ul></div></div>
  ${adSlot('footer')}<p class="meta">© ${new Date().getFullYear()} BAAM 360</p></div></footer>${fab()}`;
  window.scrollTo(0,0);loadAds()}
-function nlBox(){return `<section class="nl" id="nl"><h3 style="font:800 26px var(--serif);margin:0">${t('news')}</h3><form onsubmit="subscribe(event)"><input type="email" name="e" required placeholder="${t('email')}" aria-label="${t('email')}" style="flex:1;min-width:200px"><button class="btn">${t('sub')}</button></form><small>${t('consent')}</small></section>`}
+function nlBox(){const on=localStorage.getItem('gk_push');return `<section class="nl" id="nl"><h2 style="font:800 26px var(--serif);margin:0">${t('news')}</h2><div><button class="btn" id="pushbtn" onclick="pushSub()">${on?'✓ ':'🔔 '}${on?(L==='ur'?'نوٹیفیکیشن آن ہیں':'Notifications are on'):(L==='ur'?'سبسکرائب کریں':'Subscribe')}</button></div>
+ <details><summary style="cursor:pointer">${L==='ur'?'یا ای میل سے سبسکرائب کریں':'Or subscribe by email'}</summary><form onsubmit="subscribe(event)" style="margin-top:8px"><input type="email" name="e" required placeholder="${t('email')}" aria-label="${t('email')}" style="flex:1;min-width:200px"><button class="btn">${t('sub')}</button></form></details><small>${t('consent')}</small></section>`}
+const u8=x=>{const b=atob((x+'='.repeat((4-x.length%4)%4)).replace(/-/g,'+').replace(/_/g,'/'));return Uint8Array.from(b,c=>c.charCodeAt(0))};
+async function pushSub(){
+ if(!('serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window)){toast(L==='ur'?'یہ براؤزر نوٹیفیکیشن کی سہولت نہیں دیتا۔ ای میل سے سبسکرائب کریں۔ (آئی فون پر پہلے سائٹ کو ہوم اسکرین میں شامل کریں)':'Notifications are not supported here. Subscribe by email below. (On iPhone, first add the site to your Home Screen.)',1);return go(P()+'newsletter')}
+ try{if(Notification.permission==='denied')return toast(L==='ur'?'نوٹیفیکیشن بلاک ہیں۔ براؤزر کی سیٹنگ سے اجازت دیں۔':'Notifications are blocked. Allow them in your browser settings.',1);
+  const perm=await Notification.requestPermission();if(perm!=='granted')return toast(L==='ur'?'اجازت نہیں ملی۔':'Permission was not granted.',1);
+  const reg=await navigator.serviceWorker.register('/sw.js?lang='+L);await navigator.serviceWorker.ready;
+  const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(C.VAPID_PUBLIC_KEY)}),j=sub.toJSON();
+  const{error}=await sb.rpc('save_push_subscription',{p_endpoint:j.endpoint,p_p256dh:j.keys.p256dh,p_auth:j.keys.auth,p_lang:L});if(error)throw error;
+  localStorage.setItem('gk_push','1');const b=$('#pushbtn');if(b)b.textContent='✓ '+(L==='ur'?'نوٹیفیکیشن آن ہیں':'Notifications are on');
+  toast(L==='ur'?'سبسکرائب ہو گئے ✓ ہر نئے مضمون کی اطلاع ملے گی':'Subscribed ✓ You will be notified of every new article')}catch(e){toast(e.message||'Error',1)}}
+async function notifyAll(){if(!confirm('Send a notification about the newest article to all subscribers?'))return;let off=0,sent=0;
+ const{data:{session}}=await sb.auth.getSession();if(!session)return toast('Please log in',1);
+ for(let n=0;n<200;n++){const r=await fetch('/api/notify',{method:'POST',headers:{'content-type':'application/json',authorization:'Bearer '+session.access_token},body:JSON.stringify({offset:off})});let j={};try{j=await r.json()}catch(e){}
+  if(!r.ok)return toast(j.error||'Failed to send',1);sent+=j.sent;if(j.done)break;off=j.next}
+ toast('Notification sent to '+sent+' subscriber'+(sent===1?'':'s')+' ✓')}
 async function subscribe(e){e.preventDefault();const b=e.target.querySelector('button');b.disabled=true;const{data,error}=await sb.rpc('subscribe_newsletter',{p_email:e.target.e.value,p_lang:L});b.disabled=false;
  if(error)return toast(error.message,1);toast(data==='exists'?'Already subscribed':'Subscribed ✓');if(data)e.target.reset()}
 // ---------- views ----------
@@ -250,11 +267,11 @@ function shareOpen(id){const p=(window.__pl||[]).find(x=>x.id===id);if(!p||!p.po
  const url=x=>BASE()+U.art(x.lang,cat,x.slug),mk=x=>x.title+'\n\n'+(x.excerpt||'').slice(0,200)+'\n\n'+(x.lang==='ur'?'مکمل خبر':'Read more')+': '+url(x);
  const o=document.createElement('div');o.className='dr';o.id='shr';o.onclick=e=>{if(e.target===o)o.remove()};
  o.innerHTML=`<div style="background:#fff;max-width:480px;margin:8vh auto;padding:18px;border-radius:12px"><h3 style="margin:0 0 8px">Share article</h3><select id="sl">${T.map((x,i)=>`<option value="${i}">${x.lang==='ur'?'اردو':'English'}</option>`).join('')}</select>
- <textarea id="sm" rows="7" style="margin:8px 0"></textarea><div class="f"><button class="btn" id="s_wa" style="background:#25D366">WhatsApp channel</button><button class="btn" id="s_x" style="background:#111">X</button><button class="btn" id="s_fb" style="background:#1877F2">Facebook</button><button class="btn g" id="s_cp">Copy</button><button class="btn g" id="s_cl">Close</button></div>
+ <textarea id="sm" rows="7" style="margin:8px 0"></textarea><div class="f"><button class="btn" id="s_wa" style="background:#25D366">WhatsApp channel</button><button class="btn" id="s_x" style="background:#111">X</button><button class="btn" id="s_fb" style="background:#1877F2">Facebook</button><button class="btn" id="s_pn" style="background:#6b21a8">🔔 Notify subscribers</button><button class="btn g" id="s_cp">Copy</button><button class="btn g" id="s_cl">Close</button></div>
  <p class="meta" style="font-size:13px">WhatsApp channel and Facebook: the text is copied automatically — paste it into your post. X opens with the text and link filled in.</p></div>`;
  document.body.append(o);const cur=()=>T[$('#sl').value],set=()=>{$('#sm').value=mk(cur())};set();$('#sl').onchange=set;
  const cp=()=>navigator.clipboard.writeText($('#sm').value).then(()=>toast('Text copied ✓'),()=>toast('Copy manually from the box',1));
- $('#s_cp').onclick=cp;$('#s_cl').onclick=()=>o.remove();
+ $('#s_cp').onclick=cp;$('#s_pn').onclick=notifyAll;$('#s_cl').onclick=()=>o.remove();
  $('#s_wa').onclick=()=>{cp();window.open(C.WHATSAPP_CHANNEL,'_blank','noopener')};
  $('#s_fb').onclick=()=>{cp();window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url(cur())),'_blank','noopener')};
  $('#s_x').onclick=()=>window.open('https://x.com/intent/post?text='+encodeURIComponent((cur().title+' — '+(cur().excerpt||'')).slice(0,230))+'&url='+encodeURIComponent(url(cur()))+'&via='+encodeURIComponent((C.X_URL||'').split('/').pop()),'_blank','noopener')}
