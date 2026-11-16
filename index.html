@@ -17,7 +17,8 @@
 
 <link rel="canonical" href="" id="canon">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;700;800&family=Instrument+Sans:wght@400;500;600&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://mqpfsqokaydsztanpkhj.supabase.co" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;700;800&family=Instrument+Sans:wght@400;500;600&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;700;800&family=Instrument+Sans:wght@400;500;600&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet"></noscript>
 <style>
 :root{--or:#E8590C;--ink:#1F2328;--mut:#5f6670;--bg:#fff;--sf:#F3F4F6;--ln:#e4e6ea;--r:10px;--serif:'Source Serif 4',Georgia,serif;--sans:'Instrument Sans',system-ui,sans-serif}
 [dir=rtl]{--serif:'Noto Nastaliq Urdu',serif;--sans:'Noto Nastaliq Urdu',sans-serif;line-height:2}
@@ -75,6 +76,7 @@ table.t{width:100%;border-collapse:collapse}.t td,.t th{border-bottom:1px solid 
 .lrow img,.lrow .card-ph{aspect-ratio:16/10;width:100%;height:auto;object-fit:cover;border-radius:var(--r)}.lrow h3{font:700 22px/1.3 var(--serif);margin:6px 0}.lrow:hover h3{color:var(--or)}.lrow p{margin:4px 0;color:var(--mut)}
 .pop{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--ln);font-weight:600}.pop b{color:var(--or);font:800 22px var(--serif)}.pop:hover{color:var(--or)}
 .follow a{margin-inline-end:14px;font-weight:600;color:var(--or)}
+.boot{display:flex;min-height:70vh;align-items:center;justify-content:center;font:800 34px Georgia,serif}.boot i{color:#E8590C;font-style:normal}.ssr{position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden}
 .fab{position:fixed;inset-inline-end:16px;bottom:18px;display:flex;flex-direction:column;gap:10px;z-index:30}.fab a{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px #0003;transition:transform .2s}.fab a:hover{transform:scale(1.1)}.fab svg{width:26px;height:26px;fill:#fff}@media(max-width:520px){.fab a{width:44px;height:44px}}
 .body figure{margin:18px 0}.body figcaption{color:var(--mut);font-size:14px;text-align:center}.body video{width:100%;border-radius:8px;background:#000}.body .yt{position:relative;padding-top:56.25%;margin:18px 0;background:#000;border-radius:8px;overflow:hidden}.body .yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.body .yt a{position:absolute;inset:0;color:#fff;display:flex;align-items:center;justify-content:center}
 @media(max-width:800px){.cols2{grid-template-columns:1fr}.lrow{grid-template-columns:120px 1fr;gap:12px}.lrow h3{font-size:17px}.lrow p{display:none}.hero1 .big{min-height:340px}}
@@ -89,7 +91,7 @@ table.t{width:100%;border-collapse:collapse}.t td,.t th{border-bottom:1px solid 
 // FACEBOOK_URL: paste your Facebook page link between the quotes when it is ready; the Facebook icon then appears automatically.
 window.CFG={SUPABASE_URL:'https://mqpfsqokaydsztanpkhj.supabase.co',SUPABASE_ANON_KEY:'sb_publishable_-vfCDMw3va6C-NOeXYZc5w_pidx_JiR',GOOGLE_ADSENSE_CLIENT_ID:'',GOOGLE_ANALYTICS_ID:'',WEBSITE_DOMAIN:'',VAPID_PUBLIC_KEY:'BDj4Fjl9IIuWLSVNeFnJzJzd6ld31iwNaIOWa0uZ3B79YmT3xoEQ8_Kh9mInik3ps_Swm1n-UZyarf8zTsa7Ni8',WHATSAPP_CHANNEL:'https://whatsapp.com/channel/0029VbEczRe0AgW8DkoZjZ41',FACEBOOK_URL:'https://www.facebook.com/share/1DZYNtGmEs/',X_URL:'https://x.com/ObaiidKhalid'};
 </script>
-<div id="app"></div><div id="toast" role="status"></div>
+<div id="app"><div class="boot"><b>BAAM <i>360</i></b></div></div><div id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
 <script>
@@ -131,7 +133,7 @@ function setLang(l){L=l;localStorage.setItem('gk_lang',l);document.documentEleme
  if(R.admin){route();return}if(R.type==='article'){go(window.__sib&&window.__sib[l]||PL(l));return}go(PL(l)+R.seg.map(encodeURIComponent).join('/'))}
 // ---------- data ----------
 const SEL='title,slug,excerpt,lang,post_id,posts!inner(id,status,publish_at,featured_image,image_alt,published_at,is_featured,is_breaking,view_count,category_id,author_id,categories(slug,name_en,name_ur))';
-async function posts(lang,f){let q=sb.from('post_translations').select(SEL).eq('lang',lang).in('posts.status',['published','scheduled']).order('published_at',{referencedTable:'posts',ascending:false}).limit(60);if(f)q=f(q);const{data,error}=await q;if(error)throw error;
+async function posts(lang,f){let q=sb.from('post_translations').select(SEL).eq('lang',lang).in('posts.status',['published','scheduled']).order('published_at',{referencedTable:'posts',ascending:false}).limit(200);if(f)q=f(q);const{data,error}=await q;if(error)throw error;
  return data.filter(r=>r.posts.status==='published'||new Date(r.posts.publish_at)<=new Date())}
 const href=r=>U.art(r.lang,r.posts.categories?.slug,r.slug);
 const img=(p,w)=>p?`<img loading="lazy" src="${esc(p)}" alt="${esc(w||'')}">`:`<div class="card-ph" style="aspect-ratio:16/10;background:var(--sf);border-radius:10px"></div>`;
@@ -195,8 +197,8 @@ async function home(){
  <aside><h2 class="sec">${t('trend')}</h2>${pop.map((r,i)=>`<a class="pop" href="${href(r)}"><b>${i+1}</b><span>${esc(r.title)}</span></a>`).join('')}<h2 class="sec">${L==='ur'?'زمرے':'Categories'}</h2>${CATS.map(c=>`<a class="pop" href="${P()}${c.slug}"><span>${esc(cn(c))}</span></a>`).join('')}${adSlot('sidebar')}</aside></div>`;
  $('#main').innerHTML=adSlot('header')+h+nlBox();loadAds();setMeta('BAAM 360 — Knowledge Without Borders','International bilingual magazine in English and Urdu.',{'@context':'https://schema.org','@type':'Organization',name:'BAAM 360',url:BASE(),logo:BASE()+'/apple-touch-icon.png',sameAs:[C.WHATSAPP_CHANNEL,C.FACEBOOK_URL,C.X_URL].filter(Boolean)})}
 async function category(s){const c=CATS.find(x=>x.slug===s)||(await sb.from('categories').select('*').eq('slug',s).single()).data;await shell('<p>Loading…</p>',s);if(!c)return notFound();
- const rows=await posts(L,q=>q.eq('posts.category_id',c.id));setMeta(cn(c)+' — BAAM 360',L==='ur'?c.description_ur:c.description_en);
- $('#main').innerHTML=`<h1 style="font:800 40px var(--serif)">${esc(cn(c))}</h1><p class="meta">${esc((L==='ur'?c.description_ur:c.description_en)||'')}</p>${adSlot('category')}${rows.length?`<div class="grid">${rows.map(card).join('')}</div>`:`<p>${t('empty')}</p>`}`+nlBox();loadAds()}
+ const rows=(await posts(L,q=>q.eq('posts.category_id',c.id))).sort((x,y)=>new Date(y.posts.published_at)-new Date(x.posts.published_at));window.__cm=rows.slice(12).map(card).join('');setMeta(cn(c)+' — BAAM 360',L==='ur'?c.description_ur:c.description_en);
+ $('#main').innerHTML=`<h1 style="font:800 40px var(--serif)">${esc(cn(c))}</h1><p class="meta">${esc((L==='ur'?c.description_ur:c.description_en)||'')}</p>${adSlot('category')}${rows.length?`<div class="grid" id="cg">${rows.slice(0,12).map(card).join('')}</div>${rows.length>12?`<p style="text-align:center;margin-top:20px"><button class="btn g" onclick="document.getElementById('cg').insertAdjacentHTML('beforeend',window.__cm);this.remove()">${L==='ur'?'مزید دیکھیں':'Load more'}</button></p>`:''}`:`<p>${t('empty')}</p>`}`+nlBox();loadAds()}
 async function search(q){await shell('<p>…</p>');const term=q.replace(/[%,()]/g,' ').trim();
  const{data,error}=await sb.from('post_translations').select(SEL).in('posts.status',['published']).or(`title.ilike.%${term}%,excerpt.ilike.%${term}%,body.ilike.%${term}%`).limit(40);
  $('#main').innerHTML=`<h1 style="font:800 32px var(--serif)">${t('search')}: ${esc(q)}</h1>`+(error?`<p>${esc(error.message)}</p>`:data.length?`<div class="grid">${data.map(r=>card(r)).join('')}</div>`:`<p>${t('empty')}</p>`)}
@@ -333,7 +335,7 @@ async function savePost(id,status){try{
  await sb.from('activity_logs').insert({user_id:ME.id,action:status||'save',entity:'post',entity_id:id});
  dirty=false;localStorage.removeItem('gk_draft');toast('Saved ✓');if(status==='published'){go('/admin/posts');setTimeout(()=>shareOpen(id),1200)}else go('/admin/edit/'+id)}catch(e){toast(e.message,1)}}
 // ---------- router ----------
-function showErr(m){const a=$('#app');if(a&&!a.children.length)a.innerHTML='<div style="padding:40px;font-family:sans-serif;max-width:640px;margin:auto"><h2>Something went wrong</h2><pre style="white-space:pre-wrap;background:#f3f4f6;padding:12px;border-radius:8px">'+esc(m)+'</pre><p><a href="/">Home</a></p></div>'}
+function showErr(m){const a=$('#app');if(a&&!a.children.length)a.innerHTML='<div style="padding:40px;font-family:sans-serif;max-width:640px;margin:auto"><h2>Something went wrong</h2><pre style="white-space:pre-wrap;background:#f3f4f6;padding:12px;border-radius:8px">'+esc(m)+'</pre><p><button onclick="location.reload()">Retry</button> <a href="/">Home</a></p></div>'}
 addEventListener('unhandledrejection',e=>showErr(String((e.reason&&e.reason.message)||e.reason)));addEventListener('error',e=>showErr(e.message));
 async function route(){document.body.style.overflow='';
  const dec=x=>{try{return decodeURIComponent(x)}catch(e){return x}};
@@ -358,7 +360,7 @@ async function route(){document.body.style.overflow='';
  if(seg.length===1&&CATS.some(c=>c.slug===seg[0])){R.type='cat';return category(seg[0])}
  if(seg.length<=2){R.type='article';return article(L,seg[seg.length-1])}
  return notFound()
- }catch(e){console.error(e);toast(e.message||'Error',1);showErr(e.message)}}
+ }catch(e){console.error(e);const k=location.pathname;if(window.__rk!==k){window.__rk=k;window.__rc=0}if(++window.__rc<=2){setTimeout(route,1500);return}toast(e.message||'Error',1);showErr(e.message)}}
 addEventListener('popstate',route);addEventListener('hashchange',route);
 document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a[href]');if(!a||e.defaultPrevented||e.button||e.metaKey||e.ctrlKey||e.shiftKey||a.target==='_blank')return;
  const h=a.getAttribute('href');if(!h.startsWith('/')||h.startsWith('//')||/\.[a-z0-9]+$/i.test(h.split('?')[0]))return;e.preventDefault();
