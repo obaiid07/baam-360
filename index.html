@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
- <meta name="google-adsense-account" content="ca-pub-5570066949456083">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-adsense-account" content="ca-pub-5570066949456083">
 <title>BAAM 360 — Knowledge Without Borders</title>
 <meta name="description" content="International bilingual magazine: education, health, news, technology and more in English and Urdu.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2215%22%20fill%3D%22%23E8590C%22/%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2219%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223.5%22/%3E%3Cellipse%20cx%3D%2232%22%20cy%3D%2232%22%20rx%3D%228%22%20ry%3D%2219%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22/%3E%3Cpath%20d%3D%22M13%2032h38%22%20stroke%3D%22%23fff%22%20stroke-width%3D%223%22/%3E%3Ccircle%20cx%3D%2249%22%20cy%3D%2215%22%20r%3D%225%22%20fill%3D%22%231F2328%22/%3E%3C/svg%3E"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><meta name="theme-color" content="#E8590C">
@@ -91,7 +91,7 @@ table.t{width:100%;border-collapse:collapse}.t td,.t th{border-bottom:1px solid 
 <script>
 // WEBSITE_DOMAIN: leave '' to use the domain the site is opened on; set to 'https://baam360.online' once that domain is connected.
 // FACEBOOK_URL: paste your Facebook page link between the quotes when it is ready; the Facebook icon then appears automatically.
-window.CFG={SUPABASE_URL:'https://mqpfsqokaydsztanpkhj.supabase.co',SUPABASE_ANON_KEY:'sb_publishable_-vfCDMw3va6C-NOeXYZc5w_pidx_JiR',GOOGLE_ADSENSE_CLIENT_ID:'',GOOGLE_ANALYTICS_ID:'',WEBSITE_DOMAIN:'',VAPID_PUBLIC_KEY:'BDj4Fjl9IIuWLSVNeFnJzJzd6ld31iwNaIOWa0uZ3B79YmT3xoEQ8_Kh9mInik3ps_Swm1n-UZyarf8zTsa7Ni8',WHATSAPP_CHANNEL:'https://whatsapp.com/channel/0029VbEczRe0AgW8DkoZjZ41',FACEBOOK_URL:'https://www.facebook.com/share/1DZYNtGmEs/',X_URL:'https://x.com/ObaiidKhalid'};
+window.CFG={SUPABASE_URL:'https://mqpfsqokaydsztanpkhj.supabase.co',SUPABASE_ANON_KEY:'sb_publishable_-vfCDMw3va6C-NOeXYZc5w_pidx_JiR',GOOGLE_ADSENSE_CLIENT_ID:'',GOOGLE_ANALYTICS_ID:'',WEBSITE_DOMAIN:'',VAPID_PUBLIC_KEY:'BDj4Fjl9IIuWLSVNeFnJzJzd6ld31iwNaIOWa0uZ3B79YmT3xoEQ8_Kh9mInik3ps_Swm1n-UZyarf8zTsa7Ni8',WHATSAPP_CHANNEL:'https://whatsapp.com/channel/0029VbEczRe0AgW8DkoZjZ41',FACEBOOK_URL:'https://www.facebook.com/share/1DZYNtGmEs/',X_URL:'https://x.com/ObaiidKhalid',MONETAG_ENABLED:false,MONETAG_ZONE:'311509'};
 </script>
 <div id="app"><div class="boot"><b>BAAM <i>360</i></b></div></div><div id="toast" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
@@ -371,6 +371,8 @@ addEventListener('popstate',route);addEventListener('hashchange',route);
 document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a[href]');if(!a||e.defaultPrevented||e.button||e.metaKey||e.ctrlKey||e.shiftKey||a.target==='_blank')return;
  const h=a.getAttribute('href');if(!h.startsWith('/')||h.startsWith('//')||/\.[a-z0-9]+$/i.test(h.split('?')[0]))return;e.preventDefault();
  if(h===location.pathname+location.search){window.scrollTo(0,0);return}history.pushState(null,'',h);route()});
+// Monetag (pop/push ad network). Off by default so it does not interfere with the Google AdSense review; set MONETAG_ENABLED:true in CFG to switch it on. Never loads on /admin.
+if(C.MONETAG_ENABLED&&!location.pathname.startsWith('/admin')){const m=document.createElement('script');m.src='https://quge5.com/88/tag.min.js';m.async=true;m.dataset.zone=C.MONETAG_ZONE;m.setAttribute('data-cfasync','false');document.head.append(m)}
 route();
 </script>
 </body></html>
