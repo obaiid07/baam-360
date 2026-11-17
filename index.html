@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
+<script>(function(s){s.dataset.zone='12285352',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="google-adsense-account" content="ca-pub-5570066949456083">
@@ -16,22 +17,18 @@
 <link rel="manifest" href="/manifest.json">
 
 
-<!-- Monetag In-Page Push: Zone 12285352 -->
+<!-- Monetag In-Page Push -->
 <script>
-(function(s){
-    s.dataset.zone='12285352';
-    s.src='https://nap5k.com/tag.min.js';
-})(document.documentElement.appendChild(document.createElement('script')));
-</script>
+<head>
+    <!-- Existing favicon, theme color and manifest code -->
 
-<!-- Monetag Vignette Banner: Zone 12287512 -->
-<script>
-(function(s){
-    s.dataset.zone='12287512';
-    s.src='https://n6wxm.com/vignette.min.js';
-})(document.documentElement.appendChild(document.createElement('script')));
-</script>
+    <!-- Monetag In-Page Push: Zone 12285352 -->
+    <!-- Yahan dashboard se copied exact In-Page Push tag paste karein -->
 
+    <!-- Monetag Vignette: Zone 12287512 -->
+    <!-- Yahan dashboard se copied exact Vignette tag paste karein -->
+
+</head>
 <!-- Google Tag Manager -->
 <script>
 (function(w,d,s,l,i){
@@ -58,8 +55,12 @@ gtag('config','G-NPB3V2QLQ6',{send_page_view:false});
 
 <link rel="alternate" type="application/rss+xml" title="BAAM 360 (English)" href="/rss.xml">
 <link rel="alternate" type="application/rss+xml" title="BAAM 360 (اردو)" href="/rss.xml?lang=ur">
+</head>
 
-
+<!-- Google Analytics 4 (G-NPB3V2QLQ6): page views are sent by the site on every page change -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NPB3V2QLQ6"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-NPB3V2QLQ6',{send_page_view:false});</script>
+<link rel="alternate" type="application/rss+xml" title="BAAM 360 (English)" href="/rss.xml"><link rel="alternate" type="application/rss+xml" title="BAAM 360 (اردو)" href="/rss.xml?lang=ur">
 
 <link rel="canonical" href="" id="canon">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -416,6 +417,8 @@ addEventListener('popstate',route);addEventListener('hashchange',route);
 document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a[href]');if(!a||e.defaultPrevented||e.button||e.metaKey||e.ctrlKey||e.shiftKey||a.target==='_blank')return;
  const h=a.getAttribute('href');if(!h.startsWith('/')||h.startsWith('//')||/\.[a-z0-9]+$/i.test(h.split('?')[0]))return;e.preventDefault();
  if(h===location.pathname+location.search){window.scrollTo(0,0);return}history.pushState(null,'',h);route()});
+// Monetag (pop/push ad network). Off by default so it does not interfere with the Google AdSense review; set MONETAG_ENABLED:true in CFG to switch it on. Never loads on /admin.
+if(C.MONETAG_ENABLED&&!location.pathname.startsWith('/admin')){const m=document.createElement('script');m.src='https://quge5.com/88/tag.min.js';m.async=true;m.dataset.zone=C.MONETAG_ZONE;m.setAttribute('data-cfasync','false');document.head.append(m)}
 route();
 </script>
 </body></html>
