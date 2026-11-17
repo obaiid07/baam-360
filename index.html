@@ -17,7 +17,12 @@
 <link rel="manifest" href="/manifest.json">
 
 <!-- Monetag Push Notifications -->
-<script src="https://5gvci.com/act/files/tag.min.js?z=12284924" data-cfasync="false" async></script>
+self.options = {
+    "domain": "5gvci.com",
+    "zoneId": 12283826
+}
+self.lary = ""
+importScripts('https://5gvci.com/act/files/service-worker.min.js?r=sw')
 
 <!-- Monetag In-Page Push Banner -->
 <script>
