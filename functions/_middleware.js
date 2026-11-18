@@ -33,6 +33,9 @@ export async function onRequest({request,env,next}){
    if(c[0]){isCat=true;title=(lang==='ur'?c[0].name_ur:c[0].name_en)+' — BAAM 360';desc=lang==='ur'?c[0].description_ur:c[0].description_en;canon=base+PL(lang)+slug;
     const rs=await R(`post_translations?select=title,slug,lang,excerpt,posts!inner(status,published_at,publish_at,categories!inner(slug))&lang=eq.${lang}&posts.categories.slug=eq.${encodeURIComponent(slug)}&order=updated_at.desc&limit=40`);
     fallback=`<h1>${esc(title)}</h1><ul>${links(rs)}</ul>`}}
+  if(!isCat&&seg.length===2){const sc=await R(`subcategories?select=id,slug,name_en,name_ur,categories!inner(slug,name_en,name_ur)&slug=eq.${encodeURIComponent(seg[1])}&categories.slug=eq.${encodeURIComponent(seg[0])}&limit=1`);
+   if(sc[0]){isCat=true;const nm=lang==='ur'?sc[0].name_ur:sc[0].name_en,cn=lang==='ur'?sc[0].categories.name_ur:sc[0].categories.name_en;title=nm+' — '+cn+' — BAAM 360';desc=nm+' — '+cn;canon=base+PL(lang)+seg[0]+'/'+seg[1];
+    const rs=await R(`post_translations?select=title,slug,lang,excerpt,posts!inner(status,published_at,publish_at,subcategory_id,categories!inner(slug))&lang=eq.${lang}&posts.subcategory_id=eq.${sc[0].id}&order=updated_at.desc&limit=40`);fallback=`<h1>${esc(nm)}</h1><ul>${links(rs)}</ul>`}}
   if(!isCat){
    const rows=await R(`post_translations?select=title,slug,lang,excerpt,body,seo_title,meta_description,updated_at,posts!inner(status,published_at,publish_at,featured_image,categories(slug))&slug=eq.${encodeURIComponent(slug)}&limit=4`);
    const ok=rows.filter(r=>visible(r.posts)&&r.posts.categories);const r=ok.find(x=>x.lang===lang)||ok[0];
