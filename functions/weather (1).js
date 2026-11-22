@@ -10,7 +10,8 @@ export async function onRequestGet({request,env}){
  else if(url.searchParams.has('lat')){const la=parseFloat(url.searchParams.get('lat')),lo=parseFloat(url.searchParams.get('lon'));if(!(la>=-90&&la<=90&&lo>=-180&&lo<=180))return J({error:'Bad coordinates'},400);pts=[['here','','',rd(la),rd(lo),'here']];cc='private, max-age=300'}
  const key=env.OPEN_METEO_KEY,base=key?'https://customer-api.open-meteo.com/v1/forecast':'https://api.open-meteo.com/v1/forecast';
  const q='?latitude='+pts.map(c=>c[3]).join(',')+'&longitude='+pts.map(c=>c[4]).join(',')+'&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m,is_day&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&hourly=precipitation_probability,precipitation&forecast_days=3&timezone=auto'+(key?'&apikey='+encodeURIComponent(key):'');
- let data;try{const r=await fetch(base+q,{signal:AbortSignal.timeout(8000),cf:{cacheTtl:900,cacheEverything:true}});if(!r.ok)throw new Error('bad status');data=await r.json()}catch(e){return J({error:'Weather service unavailable'},502)}
+ let data;try{const r=await fetch(base+q,{signal:AbortSignal.timeout(8000),cf:{cacheTtlByStatus:{'200-299':900,'300-599':0},cacheEverything:true}});
+  if(!r.ok)throw new Error('Open-Meteo returned '+r.status+' '+(await r.text()).slice(0,200));data=await r.json()}catch(e){return J({error:'Weather service unavailable',detail:String(e&&e.message||e)},502)}
  const arr=Array.isArray(data)?data:[data];
  const cities=arr.map((d,i)=>{const c=pts[i],cur=d.current||{},h=d.hourly||{},dd=d.daily||{},now=String(cur.time||'').slice(0,13)+':00';let nr=null;
   if(h.time)for(let k=0;k<h.time.length;k++){if(h.time[k]<now)continue;if((h.precipitation&&h.precipitation[k]||0)>=0.2||(h.precipitation_probability&&h.precipitation_probability[k]||0)>=60){nr=h.time[k];break}}
