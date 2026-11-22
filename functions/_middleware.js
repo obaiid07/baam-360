@@ -51,7 +51,9 @@ export async function onRequest({request,env,next}){
  }
  if(!seg.length){const[cs,rs]=await Promise.all([R('categories?select=slug,name_en,name_ur&is_active=eq.true&order=sort_order'),R(`post_translations?select=title,slug,lang,excerpt,posts!inner(status,published_at,publish_at,categories(slug))&lang=eq.${lang}&order=updated_at.desc&limit=24`)]);
   fallback=`<h1>BAAM 360 — Knowledge Without Borders</h1><nav>${cs.map(c=>`<a href="${PL(lang)}${esc(c.slug)}">${esc(lang==='ur'?c.name_ur:c.name_en)}</a>`).join(' ')}</nav><ul>${links(rs)}</ul>`;canon=base+PL(lang)}
- if(seg[0]!=='admin'){const ss=await rest(env,'site_settings?select=value&key=eq.site_scripts&limit=1');const v=ss&&ss[0]&&ss[0].value;if(v&&v.enabled===true&&typeof v.code==='string'&&v.code.length<20000)inject+=v.code}
+ if(seg[0]!=='admin'){const ss=await rest(env,'site_settings?select=value&key=eq.site_scripts&limit=1');const v=ss&&ss[0]&&ss[0].value;let code='';
+  if(v&&Array.isArray(v.items))code=v.items.filter(x=>x&&x.enabled===true&&typeof x.code==='string').map(x=>x.code).join('\n');else if(v&&v.enabled===true&&typeof v.code==='string')code=v.code;
+  if(code&&code.length<40000)inject+=code}
  if(fallback)fallback+=foot(lang);
  if(robots)inject+='<meta name="robots" content="noindex,nofollow">';
  if(!canon&&!robots)canon=base+url.pathname;
