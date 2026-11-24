@@ -1,1 +1,9 @@
-{"version":1,"include":["/*"],"exclude":["/favicon.svg","/ads.txt"]}
+{
+  "version": 1,
+  "include": [
+    "/*"
+  ],
+  "exclude": [
+    "/favicon.svg"
+  ]
+}
