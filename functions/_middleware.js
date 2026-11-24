@@ -13,6 +13,7 @@ const visible=p=>!!p&&((p.status==='published'&&(!p.published_at||new Date(p.pub
 const dec=x=>{try{return decodeURIComponent(x)}catch(e){return x}};
 export async function onRequest({request,env,next}){
  const url=new URL(request.url);
+ if(/^www\./i.test(url.hostname))return Response.redirect((env.SITE_URL||'https://baam360.online').replace(/\/$/,'')+url.pathname+url.search,301); // www -> one main address
  if(/\.pages\.dev$/i.test(url.hostname))return Response.redirect((env.SITE_URL||'https://baam360.online').replace(/\/$/,'')+url.pathname+url.search,301); // one official domain only
  if(request.method!=='GET'||/\.[a-z0-9]+$/i.test(url.pathname))return next();
  if(url.pathname.startsWith('/api/'))return next();
